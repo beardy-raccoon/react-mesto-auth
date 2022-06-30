@@ -1,0 +1,13 @@
+.form__link {
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #FFF;
+  margin: 15px 0 0;
+  transition: opacity .9s;
+}
+
+.form__link:hover {
+  opacity: .6;
+  transition: opacity .3s;
+}

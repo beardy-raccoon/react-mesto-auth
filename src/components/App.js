@@ -9,9 +9,12 @@ import EditProfilePopup from './EditProfilePopup';
 import ImagePopup from './ImagePopup';
 import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
+import Login from './Login';
+import Register from './Register';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
+import { Route, Switch } from 'react-router-dom';
 
 
 export default function App() {
@@ -136,16 +139,31 @@ export default function App() {
         {/** Providing context to the App */}
         <CurrentUserContext.Provider value={currentUser}>
           <Header />
-          <Main
-            onEditProfile={handleEditProfileClick}
-            onAddPlace={handleAddPlaceClick}
-            onEditAvatar={handleEditAvatarClick}
-            onCardClick={handleCardClick}
-            onCardLike={handleCardLike}
-            onCardDelete={handleCardDelete}
-            cards={cards}
-          />
+
+          <Switch>
+            <Route path="/main">
+              <Main
+                onEditProfile={handleEditProfileClick}
+                onAddPlace={handleAddPlaceClick}
+                onEditAvatar={handleEditAvatarClick}
+                onCardClick={handleCardClick}
+                onCardLike={handleCardLike}
+                onCardDelete={handleCardDelete}
+                cards={cards}
+              />
+            </Route>
+
+            <Route path="/sign-in">
+              <Login />
+            </Route>
+
+            <Route path="/sign-up">
+              <Register />
+            </Route>
+          </Switch>
+
           <Footer />
+
           <EditProfilePopup
             isOpen={isEditProfilePopupOpen}
             onClose={closeAllPopups}
