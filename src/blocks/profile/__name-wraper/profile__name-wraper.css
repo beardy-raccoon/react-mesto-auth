@@ -1,0 +1,9 @@
+.profile__name-wraper {
+  max-width: 320px;
+}
+
+@media screen and (max-width: 592px) {
+  .profile__name-wraper {
+    max-width: 235px;
+  }
+}

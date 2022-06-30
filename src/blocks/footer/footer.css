@@ -1,0 +1,26 @@
+.footer {
+  color: #545454;
+  padding: 67px 0 60px;
+  max-width: 880px;
+  margin: 0 auto;
+}
+
+@media screen and (max-width: 899px) {
+  .footer {
+    max-width: 68.75%;
+    text-align: center;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .footer {
+    padding: 48px 19px 36px;
+  }
+}
+
+@media screen and (max-width: 374px) {
+  .footer {
+    text-align: unset;
+    max-width: unset;
+  }
+}
