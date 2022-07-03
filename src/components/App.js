@@ -11,10 +11,12 @@ import AddPlacePopup from './AddPlacePopup';
 import EditAvatarPopup from './EditAvatarPopup';
 import Login from './Login';
 import Register from './Register';
+import ProtectedRoute from './ProtectedRoute';
 
 import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
-import { Route, Switch } from 'react-router-dom';
+import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
+import * as auth from '../utils/auth';
 
 
 export default function App() {
@@ -26,6 +28,41 @@ export default function App() {
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
+  const [currentUserEmail, setCurrentUserEmail] = useState({})
+  const [loggedIn, setLoggedIn] = useState(false);
+  const history = useHistory();
+
+  const tokenCheck = () => {
+      const token = localStorage.getItem("jwt");
+      console.log(token);
+      if (token) {
+      auth.getContent(token)
+      .then((res) => {
+        if (res) {
+          setLoggedIn(true);
+          setCurrentUserEmail(res.data.email);
+        }
+      })
+    }
+  }
+
+  const handleLogin = ({email, password}) => {
+    auth.authorization(email, password)
+    .then((data) => {
+        localStorage.setItem("jwt", data.token);
+        tokenCheck();
+        history.push("/");
+        console.log('login ok', data)
+    })
+  };
+
+  const handleRegister = ({email, password}) => {
+    auth.registration(email, password)
+    .then(() => {
+      history.push('/sign-in');
+      console.log('reg')
+    })
+  }
 
   const handleEditAvatarClick = () => {
     setIsEditAvatarPopupOpen(true);
@@ -103,6 +140,12 @@ export default function App() {
     setSelectedCard({});
   };
 
+  const handleSignOut = () => {
+    console.log('handleSignOut')
+    localStorage.removeItem("jwt");
+    setLoggedIn(false);
+  }
+
   // Получили данные профиля
   useEffect(() => {
     api.getProfile()
@@ -119,7 +162,7 @@ export default function App() {
         setCards(initialCards);
       })
       .catch(console.log);
-  }, []);
+  }, [loggedIn]);
 
   useEffect(() => {
     const handleCloseByEsc = (evt) => {
@@ -133,15 +176,23 @@ export default function App() {
     }
   }, []);
 
+  useEffect(() => {
+    tokenCheck();
+  }, []);
+
+  useEffect(() => {
+    loggedIn ? history.push("/") : history.push("/sign-in")
+  }, [loggedIn]);
+
   return (
     <div className="App">
       <div className="page">
         {/** Providing context to the App */}
         <CurrentUserContext.Provider value={currentUser}>
-          <Header />
+          <Header handleClick={handleSignOut} loggedIn={loggedIn} email={currentUserEmail} />
 
           <Switch>
-            <Route path="/main">
+            <ProtectedRoute exact path="/" loggedIn={loggedIn} to>
               <Main
                 onEditProfile={handleEditProfileClick}
                 onAddPlace={handleAddPlaceClick}
@@ -151,14 +202,18 @@ export default function App() {
                 onCardDelete={handleCardDelete}
                 cards={cards}
               />
+            </ProtectedRoute>
+
+            <Route exact path="/sign-in">
+              <Login handleLogin={handleLogin} tokenCheck={tokenCheck}/>
             </Route>
 
-            <Route path="/sign-in">
-              <Login />
+            <Route exact path="/sign-up">
+              <Register handleRegister={handleRegister} />
             </Route>
 
-            <Route path="/sign-up">
-              <Register />
+            <Route>
+              {loggedIn ? <Redirect to="/main"/> : <Redirect to="/sign-in"/>}
             </Route>
           </Switch>
 

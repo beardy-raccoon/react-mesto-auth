@@ -2,7 +2,7 @@
   background-image: url(../../../images/logo-mesto.svg);
   background-size: contain;
   background-repeat: no-repeat;
-  max-width: 142px;
+  min-width: 142px;
   min-height: 33px;
 }
 
