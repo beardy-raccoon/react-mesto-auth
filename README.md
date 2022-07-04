@@ -1,4 +1,4 @@
-#  ПР-10.13: Проект Место React
+#  ПР-12: Проект Место React
 
 Учебный проект факультета Веб-разработки Яндекс Практикума - фото блог. Сайт адаптирован для корректного отображения на самых распространённых разрешениях экранов. В данный момент идет постоянная доработка функциональности приложения.
 
@@ -30,6 +30,12 @@ Expanded app functional, now users able to:
 
 all changes saves and uploads from server via Fetch Api requests
 
+### stage 12 realized:
+
+Expanded app functional, now users able to:
+
+- Use registration and authentification features
+- Login to app and logout from the app
 
 ### Технологии
 
