@@ -28,11 +28,8 @@ export default function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
-
   const [isInfoToolTipOpen, setIsInfoToolTipOpen] = useState(false);
   const [infoToolTipType, setInfoToolTipType] = useState({});
-
-
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
@@ -42,7 +39,6 @@ export default function App() {
 
   const tokenCheck = () => {
     const token = localStorage.getItem("jwt");
-    console.log(token);
     if (token) {
       auth.getContent(token)
         .then((res) => {
@@ -51,6 +47,7 @@ export default function App() {
             setCurrentUserEmail(res.data.email);
           }
         })
+        .catch(console.log)
     }
   }
 
@@ -60,7 +57,6 @@ export default function App() {
         localStorage.setItem("jwt", data.token);
         tokenCheck();
         history.push("/");
-        console.log('login ok', data)
       })
       .catch(() => {
         setIsInfoToolTipOpen(true);
@@ -76,7 +72,7 @@ export default function App() {
         history.push('/sign-in');
         setTimeout(() => setIsInfoToolTipOpen(false), 2000)
       })
-      .catch((err)=> {
+      .catch((err) => {
         setInfoToolTipType(infoToolTipError);
         setIsInfoToolTipOpen(true);
       })

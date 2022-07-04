@@ -1,4 +1,4 @@
-export default function InputsEditAvatar(props) {
+export default function InputEditAvatar(props) {
   return (
     <>
       <input type="url" name="avatarlink" id="avatar-link" className="popup__input popup__input_avatar_link" required

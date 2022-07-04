@@ -7,18 +7,18 @@ export default function Login(props) {
   });
 
   const handleInputChange = (evt) => {
-    const {name, value} = evt.target;
+    const { name, value } = evt.target;
     setAuthData({
       ...authData, [name]: value
     })
   }
 
   const handleFormSubmit = (evt) => {
-  evt.preventDefault();
-  props.handleLogin({email: authData.email, password: authData.password})
+    evt.preventDefault();
+    props.handleLogin({ email: authData.email, password: authData.password })
   }
 
-    return (
+  return (
     <div className="form form_login">
       <h2 className="form__title">Вход</h2>
       <form className="form__content" onSubmit={handleFormSubmit}>
