@@ -3,12 +3,9 @@ const BASE_URl = "https://auth.nomoreparties.co";
 const checkResponse = (res) => {
   if (res.ok) {
     return res.json();
+  } else {
+    throw new Error(res.status)
   }
-
-  return res.json()
-    .then((data) => {
-      console.log(data)
-    });
 }
 
 export const authorization = (email, password) => {

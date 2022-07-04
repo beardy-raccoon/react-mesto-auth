@@ -17,6 +17,9 @@ import { CurrentUserContext } from '../contexts/CurrentUserContext';
 import { api } from '../utils/api';
 import { Redirect, Route, Switch, useHistory } from 'react-router-dom';
 import * as auth from '../utils/auth';
+import InfoToolTip from './InfoTooltip';
+import { infoToolTipError } from '../utils/const';
+import { infoToolTipSuccess } from '../utils/const';
 
 
 export default function App() {
@@ -25,6 +28,11 @@ export default function App() {
   const [isAddPlacePopupOpen, setIsAddPlacePopupOpen] = useState(false);
   const [isEditAvatarPopupOpen, setIsEditAvatarPopupOpen] = useState(false);
   const [isImagePopupOpen, setIsImagePopupOpen] = useState(false);
+
+  const [isInfoToolTipOpen, setIsInfoToolTipOpen] = useState(false);
+  const [infoToolTipType, setInfoToolTipType] = useState({});
+
+
   const [selectedCard, setSelectedCard] = useState({});
   const [cards, setCards] = useState([]);
   const [currentUser, setCurrentUser] = useState({});
@@ -33,35 +41,45 @@ export default function App() {
   const history = useHistory();
 
   const tokenCheck = () => {
-      const token = localStorage.getItem("jwt");
-      console.log(token);
-      if (token) {
+    const token = localStorage.getItem("jwt");
+    console.log(token);
+    if (token) {
       auth.getContent(token)
-      .then((res) => {
-        if (res) {
-          setLoggedIn(true);
-          setCurrentUserEmail(res.data.email);
-        }
-      })
+        .then((res) => {
+          if (res) {
+            setLoggedIn(true);
+            setCurrentUserEmail(res.data.email);
+          }
+        })
     }
   }
 
-  const handleLogin = ({email, password}) => {
+  const handleLogin = ({ email, password }) => {
     auth.authorization(email, password)
-    .then((data) => {
+      .then((data) => {
         localStorage.setItem("jwt", data.token);
         tokenCheck();
         history.push("/");
         console.log('login ok', data)
-    })
+      })
+      .catch(() => {
+        setIsInfoToolTipOpen(true);
+        setInfoToolTipType(infoToolTipError);
+      })
   };
 
-  const handleRegister = ({email, password}) => {
+  const handleRegister = ({ email, password }) => {
     auth.registration(email, password)
-    .then(() => {
-      history.push('/sign-in');
-      console.log('reg')
-    })
+      .then(() => {
+        setInfoToolTipType(infoToolTipSuccess);
+        setIsInfoToolTipOpen(true);
+        history.push('/sign-in');
+        setTimeout(() => setIsInfoToolTipOpen(false), 2000)
+      })
+      .catch((err)=> {
+        setInfoToolTipType(infoToolTipError);
+        setIsInfoToolTipOpen(true);
+      })
   }
 
   const handleEditAvatarClick = () => {
@@ -137,6 +155,7 @@ export default function App() {
     setIsEditProfilePopupOpen(false);
     setIsAddPlacePopupOpen(false);
     setIsImagePopupOpen(false);
+    setIsInfoToolTipOpen(false);
     setSelectedCard({});
   };
 
@@ -205,7 +224,7 @@ export default function App() {
             </ProtectedRoute>
 
             <Route exact path="/sign-in">
-              <Login handleLogin={handleLogin} tokenCheck={tokenCheck}/>
+              <Login handleLogin={handleLogin} tokenCheck={tokenCheck} />
             </Route>
 
             <Route exact path="/sign-up">
@@ -213,7 +232,7 @@ export default function App() {
             </Route>
 
             <Route>
-              {loggedIn ? <Redirect to="/main"/> : <Redirect to="/sign-in"/>}
+              {loggedIn ? <Redirect to="/main" /> : <Redirect to="/sign-in" />}
             </Route>
           </Switch>
 
@@ -242,6 +261,13 @@ export default function App() {
             isOpen={isImagePopupOpen}
             onClose={closeAllPopups}
             onOverlayClick={handleOverlayClick} />
+
+          <InfoToolTip
+            type={infoToolTipType}
+            isOpen={isInfoToolTipOpen}
+            onClose={closeAllPopups}
+            onOverlayClick={handleOverlayClick}
+          />
         </CurrentUserContext.Provider>
       </div>
     </div>
