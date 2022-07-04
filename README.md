@@ -41,6 +41,7 @@ Expanded app functional, now users able to:
 
 * React
 * React Hooks
+* React Router
 
 # Getting Started with Create React App
 
