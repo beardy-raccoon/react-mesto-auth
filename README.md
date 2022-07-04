@@ -4,7 +4,7 @@
 
 В текущем модуле проект место с нативного JS будет переписан на React (ссылка на предыдущий проект: [Mesto Js-native on GitHub pages](https://beardy-raccoon.github.io/mesto/index.html))
 
-[Mesto React on GitHub pages](https://beardy-raccoon.github.io/mesto-react/)
+[Mesto React on GitHub pages](https://beardy-raccoon.github.io/react-mesto-auth/)
 
 ### Функциональность
 
